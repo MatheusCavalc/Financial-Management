@@ -183,7 +183,7 @@ const open = ref(false)
     <div class="sm:ml-64">
         <div class="p-4 dark:border-gray-700 mt-14">
             <!-- Page Content -->
-            <main class="m-2 p-8 w-full">
+            <main class="md:m-2 md:p-8 w-full">
                 <slot />
             </main>
         </div>

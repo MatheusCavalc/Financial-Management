@@ -80,18 +80,18 @@ window.addEventListener('DOMContentLoaded', async () => {
 
     //add test record to db
     // Crie objetos Date para representar as datas
-    const expenseDate = new Date("2000-10-02T00:00:00Z");
-    const expenseDue = new Date("2000-10-02T00:00:00Z");
+    //const expenseDate = new Date("2000-10-02T00:00:00Z");
+    //const expenseDue = new Date("2000-10-02T00:00:00Z");
 
-    const respInsert = await db.query(
-      `INSERT INTO expenses (id,name,value,expense_date,expense_due) values (?,?,?,?,?)`,
-      [1, "NAME Test", "VALUE Test", expenseDate.toISOString(), expenseDue.toISOString()]
-    );
-    console.log(`res: ${JSON.stringify(respInsert)}`);
+    //const respInsert = await db.query(
+    //  `INSERT INTO expenses (id,name,value,expense_date,expense_due) values (?,?,?,?,?)`,
+    //  [Date.now(), "NAME Test", "VALUE Test", expenseDate.toISOString(), expenseDue.toISOString()]
+    //);
+    //console.log(`res: ${JSON.stringify(respInsert)}`);
 
     //query db
-    const respSelect = await db.query(`SELECT * FROM expenses`);
-    console.log(`res: ${JSON.stringify(respSelect)}`);
+    //const respSelect = await db.query(`SELECT * FROM expenses`);
+    //console.log(`res: ${JSON.stringify(respSelect)}`);
 
     //drop table
     //const respDropTable = await db.execute(`DROP TABLE IF EXISTS expenses;`)
@@ -111,3 +111,5 @@ window.addEventListener('DOMContentLoaded', async () => {
     console.log(e)
   }
 })
+
+//ANDROID STUDIO
