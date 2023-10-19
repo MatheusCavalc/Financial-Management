@@ -1,9 +1,9 @@
 <script setup lang="ts">
-import { IonContent, IonPage, onIonViewDidEnter } from '@ionic/vue';
+import { IonContent, IonPage, onIonViewDidEnter, useIonRouter } from '@ionic/vue';
 import MainLayout from '@/layouts/MainLayout.vue';
 import { CapacitorSQLite, SQLiteConnection, SQLiteDBConnection } from '@capacitor-community/sqlite';
 import { ref } from 'vue'
-import { useIonRouter } from '@ionic/vue';
+import { IonDatetime, IonButtons, IonButton } from '@ionic/vue';
 
 const db = ref<SQLiteDBConnection>();
 const sqlite = ref<SQLiteConnection>();
@@ -14,6 +14,9 @@ let name = ref<string>('')
 let value = ref<string>('')
 let expense_date = ref<string>('')
 let expense_due_date = ref<string>('')
+
+let openDatePickerExpenseDate = ref<boolean>(false)
+let openDatePickerExpenseDue = ref<boolean>(false)
 
 onIonViewDidEnter(async () => {
     sqlite.value = new SQLiteConnection(CapacitorSQLite)
@@ -38,6 +41,7 @@ const createExpense = async () => {
     } finally {
         await db.value?.close()
         name.value = value.value = expense_date.value = expense_due_date.value = ''
+        openDatePickerExpenseDate.value = openDatePickerExpenseDue.value = false
         router.push('/');
     }
 };
@@ -47,7 +51,7 @@ const createExpense = async () => {
     <IonPage>
         <IonContent>
             <MainLayout namePage="New Expense">
-                <main class="">
+                <main class="p-4">
                     <div class="mt-4">
                         <div class="relative z-0 w-full mb-6 group">
                             <input type="text" name="name" id="name" v-model="name"
@@ -56,6 +60,7 @@ const createExpense = async () => {
                             <label for="name"
                                 class="peer-focus:font-medium absolute text-sm text-gray-500 dark:text-gray-400 duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:left-0 peer-focus:text-emerald-600 peer-focus:dark:text-blue-500 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6">Name</label>
                         </div>
+
                         <div class="relative z-0 w-full mb-6 group">
                             <input type="text" name="value" id="value" v-model="value"
                                 class="block py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none dark:text-white dark:border-gray-600 dark:focus:border-blue-500 focus:outline-none focus:ring-0 focus:border-emerald-600 peer"
@@ -63,19 +68,31 @@ const createExpense = async () => {
                             <label for="value"
                                 class="peer-focus:font-medium absolute text-sm text-gray-500 dark:text-gray-400 duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:left-0 peer-focus:text-emerald-600 peer-focus:dark:text-blue-500 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6">Value</label>
                         </div>
+
                         <div class="relative z-0 w-full mb-6 group">
                             <input type="text" name="expense_date" id="expense_date" v-model="expense_date"
+                                @click="openDatePickerExpenseDate = true"
                                 class="block py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none dark:text-white dark:border-gray-600 dark:focus:border-blue-500 focus:outline-none focus:ring-0 focus:border-emerald-600 peer"
                                 placeholder=" " required />
                             <label for="expense_date"
                                 class="peer-focus:font-medium absolute text-sm text-gray-500 dark:text-gray-400 duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:left-0 peer-focus:text-emerald-600 peer-focus:dark:text-blue-500 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6">Value</label>
+                            <div class="mt-4" v-if="openDatePickerExpenseDate">
+                                <IonDatetime v-model="expense_date">
+                                </IonDatetime>
+                            </div>
                         </div>
+
                         <div class="relative z-0 w-full mb-6 group">
                             <input type="text" name="expense_due_date" id="expense_due_date" v-model="expense_due_date"
+                                @click="openDatePickerExpenseDue = true"
                                 class="block py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none dark:text-white dark:border-gray-600 dark:focus:border-blue-500 focus:outline-none focus:ring-0 focus:border-emerald-600 peer"
                                 placeholder=" " required />
                             <label for="expense_due_date"
                                 class="peer-focus:font-medium absolute text-sm text-gray-500 dark:text-gray-400 duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:left-0 peer-focus:text-emerald-600 peer-focus:dark:text-blue-500 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6">Value</label>
+                            <div class="mt-4" v-if="openDatePickerExpenseDue">
+                                <IonDatetime v-model="expense_due_date">
+                                </IonDatetime>
+                            </div>
                         </div>
                         <!--
                         <div class="relative z-0 w-full mb-6 group">

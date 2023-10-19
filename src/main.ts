@@ -33,7 +33,7 @@ import { CapacitorSQLite, SQLiteConnection, SQLiteDBConnection } from '@capacito
 import { JeepSqlite } from 'jeep-sqlite/dist/components/jeep-sqlite';
 
 customElements.define('jeep-sqlite', JeepSqlite);
-console.log(`after customElements.define`);
+//console.log(`after customElements.define`);
 
 window.addEventListener('DOMContentLoaded', async () => {
   try {
@@ -46,11 +46,11 @@ window.addEventListener('DOMContentLoaded', async () => {
       const jeepSqliteEl = document.createElement('jeep-sqlite');
       document.body.appendChild(jeepSqliteEl);
       await customElements.whenDefined('jeep-sqlite');
-      console.log(`after customElements.whenDefined`)
+      //console.log(`after customElements.whenDefined`)
 
       // Initialize the Web store
       await sqlite.initWebStore();
-      console.log(`after initWebStore`)
+      //console.log(`after initWebStore`)
     }
 
     // example: database creation with standard SQLite statements 
@@ -65,7 +65,7 @@ window.addEventListener('DOMContentLoaded', async () => {
 
     //manipulate database
     await db.open();
-    console.log(`db: db_vite opened`);
+    //console.log(`db: db_vite opened`);
     const queryCreateTable = `
         CREATE TABLE IF NOT EXISTS expenses (
         id INTEGER PRIMARY KEY NOT NULL,
@@ -76,7 +76,7 @@ window.addEventListener('DOMContentLoaded', async () => {
         );
     `;
     const respCreateTable = await db.execute(queryCreateTable);
-    console.log(`res: ${JSON.stringify(respCreateTable)}`);
+    //console.log(`res: ${JSON.stringify(respCreateTable)}`);
 
     //add test record to db
     // Crie objetos Date para representar as datas

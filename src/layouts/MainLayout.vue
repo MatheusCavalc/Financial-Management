@@ -1,4 +1,5 @@
 <script setup lang="ts">
+import { onIonViewWillLeave } from '@ionic/vue';
 import { RouterLink } from 'vue-router';
 import { ref } from 'vue'
 
@@ -6,11 +7,15 @@ const props = defineProps(['namePage'])
 
 const open1 = ref(false)
 const open = ref(false)
+
+onIonViewWillLeave(async () => {
+  open1.value = false;
+})
 </script>
 
 <template>
     <div :class="{ 'overflow-hidden': open1, '': !open1 }">
-        <nav class="fixed top-0 z-50 w-full bg-emerald-600 text-white border-b border-gray-200 dark:bg-gray-800 dark:border-gray-700">
+        <nav class="fixed top-0 z-50 w-full bg-emerald-600 text-white dark:bg-gray-800 dark:border-gray-700">
             <div class="px-3 py-3 lg:px-5 lg:pl-3">
                 <div class="flex items-center justify-between">
                     <div class="flex items-center justify-start">
@@ -28,7 +33,7 @@ const open = ref(false)
                         <RouterLink :to="{ name: 'Home' }" class="flex ml-2 md:mr-24">
                             <img src="https://flowbite.com/docs/images/logo.svg" class="h-8 mr-3" alt="FlowBite Logo" />
                         </RouterLink>
-                        <span class="self-center text-sm font-semibold sm:text-2xl whitespace-nowrap dark:text-white">{{
+                        <span class="self-center text-sm sm:text-2xl whitespace-nowrap dark:text-white">{{
                             namePage }}</span>
                     </div>
                     <div class="flex items-center">
@@ -181,7 +186,7 @@ const open = ref(false)
     </div>
 
     <div class="sm:ml-64">
-        <div class="p-4 dark:border-gray-700 mt-14">
+        <div class=" dark:border-gray-700 mt-14">
             <!-- Page Content -->
             <main class="md:m-2 md:p-8 w-full">
                 <slot />
