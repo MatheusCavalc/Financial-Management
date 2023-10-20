@@ -9,7 +9,7 @@ const open1 = ref(false)
 const open = ref(false)
 
 onIonViewWillLeave(async () => {
-  open1.value = false;
+    open1.value = false;
 })
 </script>
 
@@ -30,9 +30,11 @@ onIonViewWillLeave(async () => {
                                 </path>
                             </svg>
                         </button>
-                        <RouterLink :to="{ name: 'Home' }" class="flex ml-2 md:mr-24">
-                            <img src="https://flowbite.com/docs/images/logo.svg" class="h-8 mr-3" alt="FlowBite Logo" />
-                        </RouterLink>
+                        <!--
+                            <RouterLink :to="{ name: 'Home' }" class="flex ml-2 md:mr-24">
+                                <img src="https://flowbite.com/docs/images/logo.svg" class="h-8 mr-3" alt="FlowBite Logo" />
+                            </RouterLink>
+                        -->
                         <span class="self-center text-sm sm:text-2xl whitespace-nowrap dark:text-white">{{
                             namePage }}</span>
                     </div>

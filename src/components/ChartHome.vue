@@ -100,9 +100,6 @@ const series = [{
     name: 'Value($)',
     data: props.values
 }]
-
-console.log(props.values);
-
 </script>
 
 <template>

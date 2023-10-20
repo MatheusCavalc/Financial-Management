@@ -1,63 +1,31 @@
 <script setup lang="ts">
 import { IonContent, IonPage, onIonViewDidEnter, onIonViewWillLeave } from '@ionic/vue';
-import { CapacitorSQLite, SQLiteConnection, SQLiteDBConnection } from '@capacitor-community/sqlite';
 import MainLayout from '@/layouts/MainLayout.vue';
 import ChartHome from '@/components/ChartHome.vue';
+import LastExpenses from '@/components/LastExpenses.vue';
+import { databaseQuery } from "@/store/index";
 import { ref } from 'vue';
 
-const expenses = ref<any>();
-const db = ref<SQLiteDBConnection>();
-const sqlite = ref<SQLiteConnection>();
+const queries = databaseQuery();
 
-const valuesMonth = ref<any>([]);
+const valuesMonth = ref<any>('');
+const listExpenses = ref<any>('');
 
 onIonViewDidEnter(async () => {
-  sqlite.value = new SQLiteConnection(CapacitorSQLite)
-  const ret = await sqlite.value.checkConnectionsConsistency();
-  const isConn = (await sqlite.value.isConnection("db_vite", false)).result;
-  if (ret.result && isConn) {
-    db.value = await sqlite.value.retrieveConnection("db_vite", false);
-  } else {
-    db.value = await sqlite.value.createConnection("db_vite", false, "no-encryption", 1, false);
-  }
+  await queries.enterView();
+  valuesMonth.value = queries.valuesMonth;
+  listExpenses.value = queries.lastExpenses;
+  console.log(listExpenses.value, valuesMonth.value, queries.lastExpenses);
 
-  loadData();
 });
 
 onIonViewWillLeave(async () => {
-  await sqlite.value?.closeConnection("db_vite", false);
-  valuesMonth.value = [];
+  valuesMonth.value = []
+  listExpenses.value = []
+  await queries.leaveView();
 })
 
-const loadData = async () => {
-  try {
-    await db.value?.open()
-    const respSelect = await db.value?.query(`
-      SELECT
-        SUM(CASE WHEN strftime('%d', expense_date) <= '07' THEN CAST(REPLACE(value, ',', '.') AS DECIMAL(10, 2)) ELSE 0 END) AS interval_1,
-        SUM(CASE WHEN strftime('%d', expense_date) <= '14' THEN CAST(REPLACE(value, ',', '.') AS DECIMAL(10, 2)) ELSE 0 END) AS interval_2,
-        SUM(CASE WHEN strftime('%d', expense_date) <= '21' THEN CAST(REPLACE(value, ',', '.') AS DECIMAL(10, 2)) ELSE 0 END) AS interval_3,
-        SUM(CASE WHEN strftime('%d', expense_date) <= '28' THEN CAST(REPLACE(value, ',', '.') AS DECIMAL(10, 2)) ELSE 0 END) AS interval_4
-      FROM expenses
-      WHERE strftime('%m', expense_date) = strftime('%m', 'now');
-    `);
-    //console.log(`res: ${JSON.stringify(respSelect)}`);
-    expenses.value = respSelect?.values
-
-    for (const key in expenses.value[0]) {
-      if (key !== "rowid") {
-        valuesMonth.value.push(expenses.value[0][key]);
-      }
-    }
-
-    //console.log("Array de valores:", valuesMonth.value);
-
-  } catch (error) {
-    console.log(error)
-  } finally {
-    await db.value?.close()
-  }
-}
+//REALOAD DATA ON FORM REDIRECT
 </script>
 
 <template>
@@ -65,12 +33,18 @@ const loadData = async () => {
     <IonContent>
       <MainLayout namePage="Home">
 
-        <div class="bg-emerald-600 p-6 text-white">
-          <p class="text-2xl text-white font-semibold">${{ valuesMonth[valuesMonth.length - 1] }}</p>
-        </div>
+        <div v-if="valuesMonth && listExpenses">
+          <div class="bg-emerald-600 p-6 text-white">
+            <p class="text-2xl text-white font-semibold">${{ valuesMonth[valuesMonth.length - 1] }}</p>
+          </div>
 
-        <div>
-          <ChartHome :values="valuesMonth" />
+          <div v-if="valuesMonth">
+            <ChartHome :values="valuesMonth" />
+          </div>
+
+          <div v-if="listExpenses">
+            <LastExpenses :expensesList="listExpenses[0]" />
+          </div>
         </div>
 
       </MainLayout>

@@ -1,6 +1,8 @@
 import { createApp } from 'vue'
+
 import App from './App.vue'
 import router from './router';
+import { createPinia } from 'pinia'
 
 import { IonicVue } from '@ionic/vue';
 
@@ -37,6 +39,7 @@ customElements.define('jeep-sqlite', JeepSqlite);
 
 window.addEventListener('DOMContentLoaded', async () => {
   try {
+    const pinia = createPinia()
     const platform = Capacitor.getPlatform();
     const sqlite = new SQLiteConnection(CapacitorSQLite)
 
@@ -103,7 +106,7 @@ window.addEventListener('DOMContentLoaded', async () => {
 
 
     //ionic app initialization
-    const app = createApp(App).use(IonicVue).use(router);
+    const app = createApp(App).use(IonicVue).use(router).use(pinia);
     router.isReady().then(() => {
       app.mount('#app');
     });
